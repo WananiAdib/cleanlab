@@ -74,6 +74,7 @@ def find_label_issues(
     labels: LabelLike,
     pred_probs: np.ndarray,
     *,
+    quality_metrics: Optional[np.ndarray] = None,
     return_indices_ranked_by: Optional[str] = None,
     rank_by_kwargs: Optional[Dict[str, Any]] = None,
     filter_by: str = "prune_by_noise_rate",
@@ -332,6 +333,7 @@ def find_label_issues(
             pred_probs=pred_probs,
             multi_label=multi_label,
             return_indices_of_off_diagonals=True,
+            quality_metrics=quality_metrics
         )
 
     if filter_by in ["low_normalized_margin", "low_self_confidence"]:

@@ -149,6 +149,7 @@ from cleanlab.internal.validation import (
     assert_valid_inputs,
     labels_to_array,
 )
+from cleanlab.lexical_quality import compute_quality_metrics
 from cleanlab.experimental.label_issues_batched import find_label_issues_batched
 
 
@@ -699,6 +700,7 @@ class CleanLearning(BaseEstimator):  # Inherits sklearn classifier
         labels=None,
         *,
         pred_probs=None,
+        X_raw=None,
         thresholds=None,
         noise_matrix=None,
         inverse_noise_matrix=None,
@@ -759,6 +761,7 @@ class CleanLearning(BaseEstimator):  # Inherits sklearn classifier
         """
 
         # Check inputs
+        #TODO(adib): Add validation for rawX
         assert_valid_inputs(X, labels, pred_probs)
         labels = labels_to_array(labels)
         if noise_matrix is not None and np.trace(noise_matrix) <= 1:
@@ -923,6 +926,13 @@ class CleanLearning(BaseEstimator):  # Inherits sklearn classifier
                 self.confident_joint[self.pulearning][1 - self.pulearning] = 0
                 self.confident_joint[1 - self.pulearning][1 - self.pulearning] = 1
 
+            # If raw data is added, we start working on quality metrics
+            if X_raw is not None:
+                if self.verbose:
+                    print('Computing lexical quality metrics...')
+                quality_metrics = compute_quality_metrics(X_raw)
+                self.find_label_issues_kwargs["quality_metrics"] = quality_metrics
+                    
             # Add confident joint to find label issue args if it is not previously specified
             if "confident_joint" not in self.find_label_issues_kwargs.keys():
                 # however does not add if users specify filter_by="confident_learning", as it will throw a warning

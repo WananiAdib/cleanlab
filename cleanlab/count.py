@@ -463,6 +463,7 @@ def compute_confident_joint(
     labels: LabelLike,
     pred_probs: np.ndarray,
     *,
+    quality_metrics: Optional[np.ndarray] = None,
     thresholds: Optional[Union[np.ndarray, list]] = None,
     calibrate: bool = True,
     multi_label: bool = False,
@@ -590,6 +591,15 @@ def compute_confident_joint(
         # P(we predict the given noisy label is k | given noisy label is k)
         thresholds = get_confident_thresholds(labels, pred_probs, multi_label=multi_label)
     thresholds = np.asarray(thresholds)
+
+    if quality_metrics is not None:
+      if quality_metrics.shape[0] != pred_probs.shape[0]:
+        ValueError("Quality metrics and pred probs do not have the same shape")
+      # TODO(adib): drill up alpha
+      alpha = 0.1
+      thresholds = np.tile(thresholds, (pred_probs.shape[0] ,1))
+      quality_metrics = quality_metrics.reshape(quality_metrics.shape[0], 1)
+      thresholds = alpha *  quality_metrics + (1-alpha ) * thresholds
 
     # Compute confident joint (vectorized for speed).
 

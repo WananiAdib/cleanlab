@@ -12,6 +12,7 @@ from . import multilabel_classification
 from . import object_detection
 from . import regression
 from . import segmentation
+from . import lexical_quality
 
 
 class DatalabUnavailable:
