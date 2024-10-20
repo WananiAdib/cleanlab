@@ -2,7 +2,6 @@ from textblob import TextBlob
 import language_tool_python
 import textstat
 import numpy as np
-import pandas as pd
 
 tool = language_tool_python.LanguageTool('en-US')
 
