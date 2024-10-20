@@ -11,10 +11,13 @@ pytest-cov
 requests
 scipy
 skorch
-tensorflow<2.16
+tensorflow-macos # OG: tensorflow<2.16
 torch
 torchvision
 typing-extensions>=4.8.0
 wget
 matplotlib
 pillow
+textblob
+language_tool_python
+textstat
